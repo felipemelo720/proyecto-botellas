@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Lista de compras{% endblock %}
+{% block contenido %}
+<h1>Lista de compras</h1>
+<form method="get" class="filtros">
+  <label>Local
+    <select name="local">
+      <option value="">Todos los locales</option>
+      {% for l in locales %}
+      <option value="{{ l.id }}" {% if local == l.id %}selected{% endif %}>{{ l.nombre }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Filtrar</button>
+</form>
+{% if items %}
+<table>
+  <tr><th>Producto</th><th>Categoría</th><th>Local</th><th>Stock</th><th>Mínimo</th><th>Comprar</th></tr>
+  {% for i in items %}
+  <tr>
+    <td>{{ i.nombre }}</td><td>{{ i.categoria }}</td><td>{{ i.local }}</td>
+    <td>{{ i.stock }}</td><td>{{ i.stock_minimo }}</td><td><strong>{{ i.sugerido }}</strong></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No hay productos bajo el stock mínimo.</p>
+{% endif %}
+{% endblock %}

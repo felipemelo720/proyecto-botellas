@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Movimiento{% endblock %}
+{% block contenido %}
+<h1>Registrar {{ 'entrada' if v.get('tipo') == 'entrada' else 'salida' }}</h1>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post">
+  <label>Tipo
+    <select name="tipo">
+      <option value="entrada" {% if v.get('tipo') == 'entrada' %}selected{% endif %}>Entrada</option>
+      <option value="salida" {% if v.get('tipo') == 'salida' %}selected{% endif %}>Salida</option>
+    </select>
+  </label>
+  <label>Producto
+    <select name="producto_id" required>
+      {% for p in productos %}
+      <option value="{{ p.id }}" data-stock="{{ p.stock }}" {% if v.get('producto_id')|string == p.id|string %}selected{% endif %}>{{ p.nombre }} ({{ p.local }}) · stock {{ p.stock }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Cantidad
+    <input type="number" name="cantidad" min="1" step="1" value="{{ v.get('cantidad', '') }}" required>
+  </label>
+  <label>Fecha
+    <input type="date" name="fecha" value="{{ v.get('fecha', '') }}" required>
+  </label>
+  <p id="stock-hint" class="ayuda"></p>
+  <button type="submit">Registrar</button>
+</form>
+<script>
+  const tipoSel = document.querySelector('select[name=tipo]');
+  const prodSel = document.querySelector('select[name=producto_id]');
+  const hint = document.getElementById('stock-hint');
+  function actualizarHint() {
+    const op = prodSel.options[prodSel.selectedIndex];
+    if (!op) return;
+    const etiqueta = tipoSel.value === 'salida' ? 'Stock disponible' : 'Stock actual';
+    hint.textContent = etiqueta + ': ' + op.dataset.stock;
+  }
+  tipoSel.addEventListener('change', actualizarHint);
+  prodSel.addEventListener('change', actualizarHint);
+  actualizarHint();
+</script>
+{% endblock %}

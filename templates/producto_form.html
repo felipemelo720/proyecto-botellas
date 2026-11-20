@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<h1>{{ titulo }}</h1>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post">
+  <label>Nombre
+    <input name="nombre" value="{{ v.get('nombre', '') }}" required>
+  </label>
+  <label>Categoría
+    <input name="categoria" value="{{ v.get('categoria', '') }}" required>
+  </label>
+  {% if not editar %}
+  <label>Local
+    <select name="local_id" required>
+      {% for l in locales %}
+      <option value="{{ l.id }}" {% if v.get('local_id')|string == l.id|string %}selected{% endif %}>{{ l.nombre }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Stock inicial
+    <input type="number" name="stock" min="0" step="1" value="{{ v.get('stock', '') }}" required>
+  </label>
+  {% endif %}
+  <label>Stock mínimo
+    <input type="number" name="stock_minimo" min="0" step="1" value="{{ v.get('stock_minimo', '') }}" required>
+  </label>
+  <button type="submit">Guardar</button>
+</form>
+<p><a href="{{ url_for('listado_productos') }}">Volver al listado</a></p>
+{% endblock %}

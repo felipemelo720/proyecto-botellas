@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Dar de baja{% endblock %}
+{% block contenido %}
+<h1>¿Dar de baja este producto?</h1>
+<p><strong>{{ producto.nombre }}</strong> ({{ producto.local }}) dejará de aparecer en el listado.</p>
+<form method="post">
+  <button type="submit" class="peligro">Sí, dar de baja</button>
+</form>
+<p><a href="{{ url_for('listado_productos', local=producto.local_id) }}">Cancelar</a></p>
+{% endblock %}

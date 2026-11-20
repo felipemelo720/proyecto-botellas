@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Inventario Pymes{% endblock %} · Botellas</title>
+  <style>
+    :root {
+      --marron: #3b2a1a; --dorado: #c8963e; --fondo: #f6f3ee; --tarjeta: #ffffff;
+      --texto: #2a2320; --suave: #6b6058; --borde: #e4ddd3;
+      --rojo: #b02a37; --rojo-suave: #fbe7e8; --verde: #2e7d4f; --verde-suave: #e6f4ec;
+      --amarillo-suave: #fff6dd; --radio: 10px;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--fondo); color: var(--texto); line-height: 1.45; }
+    nav { background: var(--marron); padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+    nav .marca { color: var(--dorado); font-weight: 700; letter-spacing: .4px; margin-right: auto; }
+    nav a { color: #f5e6c8; text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+    nav a:hover { background: rgba(255,255,255,.1); }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 20px; }
+    h1 { font-size: 1.6rem; margin: 0 0 16px; color: var(--marron); }
+    .card { background: var(--tarjeta); border-radius: var(--radio); box-shadow: 0 1px 3px rgba(0,0,0,.06); padding: 20px; }
+    table { border-collapse: separate; border-spacing: 0; width: 100%; margin-top: 16px; background: var(--tarjeta); border-radius: var(--radio); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    th { background: #efe8dd; color: var(--marron); font-size: 13px; text-transform: uppercase; letter-spacing: .4px; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--borde); }
+    tr:last-child td { border-bottom: none; }
+    tr.alerta td { background: var(--rojo-suave); color: var(--rojo); font-weight: 600; }
+    .aviso { background: var(--amarillo-suave); border-left: 4px solid var(--dorado); padding: 10px 14px; margin-top: 16px; border-radius: 6px; }
+    .error { background: var(--rojo-suave); border-left: 4px solid var(--rojo); color: var(--rojo); padding: 10px 14px; margin: 10px 0; border-radius: 6px; }
+    .exito { background: var(--verde-suave); border-left: 4px solid var(--verde); color: var(--verde); padding: 10px 14px; margin: 0 0 14px; border-radius: 6px; }
+    .badge { display: inline-block; background: var(--rojo); color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
+    .ayuda { color: var(--suave); font-size: 14px; margin: 6px 0; }
+    form.inline { display: inline; }
+    form { background: var(--tarjeta); border-radius: var(--radio); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.06); max-width: 620px; }
+    form > form, .filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; background: var(--tarjeta); padding: 14px 16px; border-radius: var(--radio); box-shadow: 0 1px 3px rgba(0,0,0,.06); max-width: none; }
+    label { display: block; margin-top: 12px; font-size: 14px; color: var(--suave); font-weight: 600; }
+    .filtros label { margin-top: 0; }
+    input, select { display: block; font: inherit; padding: 9px 11px; margin-top: 5px; width: 100%; min-width: 180px; max-width: 360px; border: 1px solid var(--borde); border-radius: 8px; background: #fff; color: var(--texto); }
+    input:focus, select:focus { outline: 2px solid var(--dorado); border-color: var(--dorado); }
+    button, .boton { font: inherit; font-weight: 600; padding: 9px 16px; margin-top: 14px; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 8px; border: 1px solid var(--marron); background: var(--marron); color: #fff; }
+    button:hover, .boton:hover { filter: brightness(1.15); }
+    .boton.secundario { background: transparent; color: var(--marron); border-color: var(--borde); }
+    .boton.peligro { background: var(--rojo); border-color: var(--rojo); }
+    .acciones a { font-size: 14px; color: var(--marron); font-weight: 600; text-decoration: none; margin-right: 12px; }
+    .acciones a:hover { text-decoration: underline; }
+    .tarjetas { display: none; }
+    .tarjeta { background: var(--tarjeta); border-radius: var(--radio); padding: 14px; margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); border-left: 4px solid transparent; }
+    .tarjeta.alerta { border-left-color: var(--rojo); background: var(--rojo-suave); }
+    .tarjeta .acciones { margin-top: 10px; }
+    .vacio { background: var(--tarjeta); border-radius: var(--radio); padding: 24px; text-align: center; color: var(--suave); margin-top: 16px; }
+    @media (max-width: 600px) {
+      nav { padding: 12px 14px; }
+      nav .marca { width: 100%; }
+      main { padding: 0 14px; margin-top: 16px; }
+      table.tabla { display: none; }
+      .tarjetas { display: block; }
+      input, select { min-width: 0; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="marca">Botellas · Inventario</span>
+    <a href="{{ url_for('listado_productos') }}">Productos</a>
+    <a href="{{ url_for('nuevo_producto') }}">Nuevo producto</a>
+    <a href="{{ url_for('nuevo_movimiento', tipo='entrada') }}">Entrada</a>
+    <a href="{{ url_for('nuevo_movimiento', tipo='salida') }}">Salida</a>
+    <a href="{{ url_for('lista_compras') }}">Lista de compras</a>
+  </nav>
+  <main>
+    {% for categoria, mensaje in get_flashed_messages(with_categories=true) %}
+    <div class="{{ 'exito' if categoria == 'ok' else 'error' }}">{{ mensaje }}</div>
+    {% endfor %}
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

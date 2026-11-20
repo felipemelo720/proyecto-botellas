@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Historial{% endblock %}
+{% block contenido %}
+<h1>Historial: {{ producto.nombre }}</h1>
+<p>{{ producto.local }} · stock actual {{ producto.stock }}</p>
+{% if movimientos %}
+<table>
+  <tr><th>Fecha</th><th>Tipo</th><th>Cantidad</th><th>Local</th></tr>
+  {% for m in movimientos %}
+  <tr><td>{{ m.fecha }}</td><td>{{ m.tipo }}</td><td>{{ m.cantidad }}</td><td>{{ m.local }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>Sin movimientos.</p>
+{% endif %}
+<p><a href="{{ url_for('listado_productos', local=producto.local_id) }}">Volver al listado</a></p>
+{% endblock %}
